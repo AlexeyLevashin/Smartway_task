@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  database:
+    image: postgres:16
+    restart: always
+    environment:                 
+      POSTGRES_USER: 'admin'     
+      POSTGRES_PASSWORD: 'admin' 
+      POSTGRES_DB: 'smartway_db'  
+    networks:
+      - backend
+    ports:
+      - "5431:5432"             
+    volumes:
+      - database-pg:/var/lib/postgresql/data
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  database-pg:
