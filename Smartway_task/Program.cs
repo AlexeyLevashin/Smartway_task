@@ -3,8 +3,9 @@ using Smartway_task.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 //Todo 1 в репозиториях addpassport и тп была обработка ситуаций res=0
-//Todo 2 в репе addempl была строка employee.Id = res;
-//Todo 3 убрать * в sql запросах
+
+//Todo 2 убрать * в sql запросах
+//Todo 3 убрать sql из кода
 if (builder.Environment.IsDevelopment())
 {
     DotNetEnv.Env.Load("../.env");

@@ -6,6 +6,20 @@ namespace Smartway_task.Mappers;
 
 public static class DepartmentMapper
 {
+    public static Department MapToDomain(this AddNewDepartmentRequestDto addNewDepartmentRequestDto)
+    {
+        return new Department
+        {
+            Name = addNewDepartmentRequestDto.Name,
+            Phone = addNewDepartmentRequestDto.Phone
+        };
+    }
+
+    public static Department MapToDomain(this AddDepartmentRequestDto addDepartmentRequestDto)
+    {
+        return  new Department{};
+    }
+    
     public static Department MapToDomain(this DbDepartment dbDepartment)
     {
         return new Department
@@ -25,6 +39,8 @@ public static class DepartmentMapper
             Phone = department.Phone
         };
     }
+    
+    
     
     public static DbDepartment MapToDb(this Department department)
     {

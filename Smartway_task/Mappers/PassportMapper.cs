@@ -6,14 +6,24 @@ namespace Smartway_task.Mappers;
 
 public static class PassportMapper
 {
-    public static Passport MapToDomain(this DbPassport dbPassport)
+    public static Passport MapToDomain(this AddNewPassportRequestDto addNewPassportRequestDto)
     {
         return new Passport
         {
-            Id = dbPassport.Id,
-            Type = dbPassport.Type,
-            Number = dbPassport.Number,
-            EmployeeId = dbPassport.EmployeeId
+            Type = addNewPassportRequestDto.Type,
+            Number = addNewPassportRequestDto.Number,
+        };
+    }
+    
+    
+    public static Passport MapToDomain(this DbPassport dbpassport)
+    {
+        return new Passport
+        {
+            Id = dbpassport.Id,
+            Type = dbpassport.Type,
+            Number = dbpassport.Number,
+            EmployeeId = dbpassport.EmployeeId
         };
     }
     
@@ -33,7 +43,7 @@ public static class PassportMapper
         {
             Id = passport.Id,
             Type = passport.Type,
-            Number = passport.Number
+            Number = passport.Number,
         };
     }
 }

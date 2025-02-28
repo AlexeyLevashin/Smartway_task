@@ -21,14 +21,14 @@ public class M0000_InitialMigration : Migration
             .WithColumn("name").AsString().NotNullable()
             .WithColumn("surname").AsString().NotNullable()
             .WithColumn("phone").AsString().NotNullable().Unique()
-            .WithColumn("company_id").AsInt64().NotNullable();
-            // .WithColumn("department_id").AsInt64().NotNullable().ForeignKey("departments", "id");
+            .WithColumn("companyid").AsInt64().NotNullable()
+            .WithColumn("departmentid").AsInt64().NotNullable().ForeignKey("departments", "id");
 
         Create.Table("passports")
             .WithColumn("id").AsInt64().PrimaryKey().Identity().NotNullable()
             .WithColumn("type").AsString().NotNullable()
             .WithColumn("number").AsString().NotNullable().Unique()
-            .WithColumn("employee_id").AsInt64().ForeignKey("employees", "id");
+            .WithColumn("employeeid").AsInt64().ForeignKey("employees", "id");
         
     }
 

@@ -14,6 +14,5 @@ public interface IDapperContext
     public Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(
         IQueryObject queryObject,
         Func<T1, T2, T3, TResult> map,
-        string splitOn = "PassportType,DepartmentName");
-    
+        string splitOn = "PassportType");
 }

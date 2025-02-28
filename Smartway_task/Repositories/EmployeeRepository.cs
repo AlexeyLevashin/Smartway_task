@@ -19,7 +19,7 @@ public class EmployeeRepository : IEmployeeRepository
     
      public async Task<DbEmployee> AddEmployee(DbEmployee employee)
     {
-        var department = await ValidateDepartment(employee.DbDepartment);
+         var department = await ValidateDepartment(employee.DbDepartment);
 
         return await _dapperContext.ExecuteInTransaction(async (conn, trans) =>
         {
@@ -39,10 +39,10 @@ public class EmployeeRepository : IEmployeeRepository
     private async Task<DbEmployee> AddNewEmployee(DbEmployee employee, IDbConnection connection, IDbTransaction transaction)
     {
         var queryObject = new QueryObject(
-            @"INSERT INTO Employees (Name, Surname, Phone, CompanyId, DepartmentId) 
-            VALUES (@Name, @Surname, @Phone, @CompanyId, @DepartmentId)
-            RETURNING Id, Name, Surname, Phone, CompanyId, DepartmentId", 
-            new { employee.Name, employee.Surname, employee.Phone, employee.CompanyId, DepartmentId = employee.DbDepartment.Id }, 
+            @"INSERT INTO Employees (name, surname, phone, companyid, departmentid) 
+            VALUES (@name, @surname, @phone, @companyid, @departmentid)
+            RETURNING Id, name as ""Name"", surname as ""Surname"", phone as ""Phone"", companyid as ""CompanyId"", departmentid as ""DepartmentId""", 
+            new { employee.Name, employee.Surname, employee.Phone, employee.CompanyId, employee.DepartmentId }, 
             transaction);  
 
         
@@ -55,15 +55,14 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
 
-    private async Task AddPassport(DbEmployee employee, IDbConnection connection, IDbTransaction transaction)
-    {
+    private async Task AddPassport(DbEmployee employee, IDbConnection connection, IDbTransaction transaction){
+   
         var queryObject = new QueryObject(
-            @"INSERT INTO Passports (Type, Number, EmployeeId) VALUES (@Type, @Number, @EmployeeId)",
-            new { employee.DbPassport.Type, employee.DbPassport.Number, EmployeeId = employee.Id }, 
+            @"INSERT INTO Passports (type, number, employeeid) VALUES (@type, @number, @employeeid)",
+            new { employee.DbPassport.Type, employee.DbPassport.Number, EmployeeId = employee.Id}, 
             transaction); 
 
         await connection.ExecuteAsync(queryObject.Sql, queryObject.Parameters, transaction);  
-
     }
 
     private async Task<DbDepartment> ValidateDepartment(DbDepartment department)
@@ -75,7 +74,7 @@ public class EmployeeRepository : IEmployeeRepository
 
         if (dbDepartment == null)
         {
-            throw new Exception("Department does not exist.");
+            throw new Exception("Department does not existrdtf.");
         }
 
         return dbDepartment;
@@ -83,17 +82,16 @@ public class EmployeeRepository : IEmployeeRepository
     
      public async Task<DbEmployee?> GetEmployeeByPhone(string phone)
         {
-
             var queryObject = new QueryObject(
-                @"SELECT e.id as Id, e.name as Name, e.surname as Surname, e.phone as Phone, e.company_id as CompanyId,
-                         p.id as PassportId, p.type as Type, p.number as Number,
-                         d.id as DepartmentId, d.name as DepartmentName, d.phone as DepartmentPhone
+                @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.companyid as ""CompanyId"", e.departmentid as ""DepartmentId"",
+                         p.id, p.type as ""Type"", p.number as ""Number"", p.employeeid as ""EmployeeId"",
+                         d.id, d.name as ""Name"", d.phone as ""Phone""
                   FROM Employees e
-                  LEFT JOIN Passports p ON e.Id = p.EmployeeId  
-                  LEFT JOIN Departments d ON e.DepartmentId = d.Id  
+                  LEFT JOIN Passports p ON p.EmployeeId = e.Id 
+                  LEFT JOIN Departments d ON d.Id = e.DepartmentId
                   WHERE e.phone = @phone",
                 new { phone}); 
-    
+            
             var employee = await _dapperContext.QueryWithJoin<DbEmployee, DbPassport, DbDepartment, DbEmployee>(
                 queryObject,
                 (employee, passport, department) =>
@@ -102,24 +100,24 @@ public class EmployeeRepository : IEmployeeRepository
                     employee.DbDepartment = department;
                     return employee;
                 },
-                splitOn: "PassportId,DepartmentId"
+                splitOn: "Id"
             );
-    
+            
             return employee.FirstOrDefault();
         }
     
-        public async Task<List<DbEmployee>> GetEmployeeByIdCompany(int companyId)
+        public async Task<List<DbEmployee>> GetEmployeeByCompanyId(int companyId)
         {
             var queryObject = new QueryObject(
-                @"SELECT e.id as Id, e.name as Name, e.surname as Surname, e.phone as Phone, e.company_id as CompanyId,
-                         p.id as PassportId, p.type as Type, p.number as Number,
-                         d.id as DepartmentId, d.name as DepartmentName, d.phone as DepartmentPhone
+                @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.companyid as ""CompanyId"", e.departmentid as ""DepartmentId"",
+                         p.id, p.type as ""Type"", p.number as ""Number"", p.employeeid as ""EmployeeId"",
+                         d.id, d.name as ""Name"", d.phone as ""Phone""
                   FROM Employees e
                   LEFT JOIN Passports p ON p.EmployeeId = e.Id 
                   LEFT JOIN Departments d ON d.Id = e.DepartmentId
-                  WHERE e.company_id = @company_id",
-                new { company_id = companyId });
-    
+                  WHERE e.companyid = @companyId",
+                new {companyId });
+        
             return await _dapperContext.QueryWithJoin<DbEmployee, DbPassport, DbDepartment, DbEmployee>(
                 queryObject,
                 (employee, passport, department) =>
@@ -128,85 +126,33 @@ public class EmployeeRepository : IEmployeeRepository
                     employee.DbDepartment = department;
                     return employee;
                 },
-                splitOn: "PassportId,DepartmentId"
+                splitOn: "Id"
             );
         }
-    
- // public async Task<DbEmployee> AddEmployee(DbEmployee employee)
- //    {
- //        return await _dapperContext.ExecuteInTransaction<DbEmployee>(async (conn, trans) =>
- //        {
- //            var department = await ValidateDepartment(employee.DbDepartment);
- //
- //            employee = await AddEmployee(employee, trans);
- //            
- //            await AddPassport(employee, trans);
- //
- //            employee.DbDepartment = department;
- //
- //            return employee;
- //        });
- //    }
- //
- //    private async Task<DbEmployee> AddEmployee(DbEmployee employee, IDbTransaction transaction)
- //    {
- //        var queryObject = new QueryObject(
- //            @"INSERT INTO Employees (Name, Surname, Phone, CompanyId) VALUES (@Name, @Surname, @Phone, @CompanyId)
- //            RETURNING Id", new { employee.Name, employee.Surname, employee.Phone, employee.CompanyId }, transaction);
- //
- //        return await _dapperContext.CommandWithResponse<DbEmployee>(queryObject);
- //    }
- //
- //    private async Task AddPassport(DbEmployee employee, IDbTransaction transaction)
- //    {
- //        var queryObject = new QueryObject(
- //        @"INSERT INTO Passports (Type, Number, EmployeeId) VALUES (@Type, @Number, @EmployeeId)
- //            RETURNING Id", new { employee.DbPassport.Type, employee.DbPassport.Number, EmployeeId = employee.Id }, transaction);
- //
- //        var res = await _dapperContext.CommandWithResponse<DbPassport>(queryObject);
- //    }
- //    
- //    private async Task<DbDepartment> ValidateDepartment(DbDepartment department)
- //    {
- //        var queryObject = new QueryObject(
- //            @"SELECT * FROM Departments WHERE Id = @Id", new { department.Id });
- //
- //        var dbDepartment = await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
- //
- //        if (dbDepartment == null)
- //        {
- //            throw new Exception("Department does not exist.");
- //        }
- //
- //        return dbDepartment;
- //    }
-
-    // public async Task<DbEmployee?> GetEmployeeByPhone(string phone)
-    // {
-    //     var queryObject = new QueryObject(
-    //         @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.company_id as ""CompanyId"",
-    //                     p.id, p.type as ""Type"", p.number as ""Number"",
-    //                     d.id, d.name as ""Name"", d.phone as ""Phone""
-    //             FROM Employees e
-    //             LEFT JOIN passports p ON e.passport_id = p.id  
-    //             LEFT JOIN departments d ON e.department_id = d.id 
-    //             WHERE e.phone = @phone", new {phone});
-    //     return await _dapperContext.FirstOrDefault<DbEmployee>(queryObject);
-    // }
-    //
-    // public async Task<List<DbEmployee>> GetEmployeeByIdCompany(int companyId)
-    // {
-    //     var queryObject = new QueryObject(
-    //         @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.company_id as ""CompanyId"",
-    //                    /* p.id,*/ p.type as ""Type"", p.number as ""Number"",
-    //                     /*d.id,*/ d.name as ""Name"", d.phone as ""Phone""
-    //             FROM Employees e
-    //             LEFT JOIN passport p ON p.employee_id = e.id
-    //             LEFT JOIN departments d ON d.id =  
-    //             WHERE e.company_id = companyId", new {company_id = companyId } );
-    //     return await GetEmployees(queryObject);
-    // }
-    
+        
+        public async Task<List<DbEmployee>> GetEmployeeByDepartmentId(int departmentId)
+        {
+            var queryObject = new QueryObject(
+                @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.companyid as ""CompanyId"", e.departmentid as ""DepartmentId"",
+                         p.id, p.type as ""Type"", p.number as ""Number"", p.employeeid as ""EmployeeId"",
+                         d.id, d.name as ""Name"", d.phone as ""Phone""
+                  FROM Employees e
+                  LEFT JOIN Passports p ON p.EmployeeId = e.Id 
+                  LEFT JOIN Departments d ON d.Id = e.DepartmentId
+                  WHERE e.department = @departmentId",
+                new {departmentId });
+        
+            return await _dapperContext.QueryWithJoin<DbEmployee, DbPassport, DbDepartment, DbEmployee>(
+                queryObject,
+                (employee, passport, department) =>
+                {
+                    employee.DbPassport = passport;
+                    employee.DbDepartment = department;
+                    return employee;
+                },
+                splitOn: "Id"
+            );
+        }
     
     private async Task<List<DbEmployee>> GetEmployees(IQueryObject queryObject)
     {
@@ -223,7 +169,7 @@ public class EmployeeRepository : IEmployeeRepository
             }
 
             return e;
-        }, "PassportType, DepartmentName"); 
+        }, "Id"); 
 
         return res.Distinct().ToList(); 
         

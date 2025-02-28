@@ -22,10 +22,17 @@ public class EmployeeController: ControllerBase
         return Ok(res.Id);
     }
 
-    [HttpGet("")]
+    [HttpGet("byCompanyId")]
     public async Task<IActionResult> GetEmployeesByCompanyId(EmployeeResponseDto employeeResponseDto)
     {
         var res = await _employeeService.GetEmployeesByCompanyId(employeeResponseDto.CompanyId);
+        return Ok(res);
+    }
+
+    [HttpGet("byDepartmentId")]
+    public async Task<IActionResult> GetEmplooyeesByDepartmentId(EmployeeResponseDto employeeResponseDto)
+    {
+        var res = await _employeeService.GetEmployeesByDepartmentId(employeeResponseDto.DepartmentId);
         return Ok(res);
     }
     

@@ -30,14 +30,20 @@ public class EmployeeService:IEmployeeService
                 Surname = addNewEmployeeRequestDto.Surname,
                 Phone = addNewEmployeeRequestDto.Phone,
                 CompanyId = addNewEmployeeRequestDto.CompanyId,
-                DbPassport = addNewEmployeeRequestDto.Passport.MapToDb(),
-                DbDepartment = addNewEmployeeRequestDto.Department.MapToDb()
+                DepartmentId = addNewEmployeeRequestDto.DepartmentId,
+                DbPassport = addNewEmployeeRequestDto.NewPassport.MapToDomain().MapToDb(),
+                DbDepartment = addNewEmployeeRequestDto.NewDepartment.MapToDomain().MapToDb()
             })).MapToDomain().MapToDto();
     }
 
-    public async Task<List<EmployeeResponseDto>> GetEmployeesByCompanyId(int idCompany)
+    public async Task<List<EmployeeResponseDto>> GetEmployeesByCompanyId(int companyId)
     {
-        return ( await _employeeRepository.GetEmployeeByIdCompany(idCompany)).MapToDomain().MapToDto();
+        return ( await _employeeRepository.GetEmployeeByCompanyId(companyId)).MapToDomain().MapToDto();
+    }
+
+    public async Task<List<EmployeeResponseDto>> GetEmployeesByDepartmentId(int departmentId)
+    {
+        return (await _employeeRepository.GetEmployeeByDepartmentId(departmentId)).MapToDomain().MapToDto();
     }
         
     

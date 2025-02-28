@@ -36,7 +36,7 @@ public class DapperContext:IDapperContext
         return await Execute(query => query.QueryFirstAsync<T>(queryObject.Sql, queryObject.Parameters));
     }
 
-    public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(IQueryObject queryObject, Func<T1, T2, T3, TResult> map, string splitOn = "PassportType,DepartmentName")
+    public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(IQueryObject queryObject, Func<T1, T2, T3, TResult> map, string splitOn = "Id")
     {
         return (await Execute(async query =>
         {

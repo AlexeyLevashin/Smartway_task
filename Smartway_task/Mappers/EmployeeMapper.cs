@@ -15,9 +15,9 @@ public static class EmployeeMapper
             Surname = dbEmployee.Surname,
             Phone = dbEmployee.Phone,
             CompanyId = dbEmployee.CompanyId,
+            DepartmentId = dbEmployee.DepartmentId,
             Passport = dbEmployee.DbPassport.MapToDomain(),
             Department = dbEmployee.DbDepartment.MapToDomain(),
-            DepartmentId = dbEmployee.DepartmentId
         };
     }
 
@@ -30,13 +30,13 @@ public static class EmployeeMapper
     {
         return new EmployeeResponseDto
         {
-            Id = employee.Id,
             Name = employee.Name,
             Surname = employee.Surname,
             Phone = employee.Phone,
             CompanyId = employee.CompanyId,
+            DepartmentId = employee.DepartmentId,
             Passport = employee.Passport.MapToDto(),
-            Department = employee.Department.MapToDto(),
+            Department = employee.Department.MapToDto()
         };
     }
     
