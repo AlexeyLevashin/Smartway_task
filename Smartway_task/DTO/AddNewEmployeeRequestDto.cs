@@ -11,5 +11,4 @@ public class AddNewEmployeeRequestDto
     public int CompanyId { get; set; }
     public int DepartmentId { get; set; }
     public AddNewPassportRequestDto NewPassport { get; set; }
-    public AddDepartmentRequestDto NewDepartment { get; set; }
 }

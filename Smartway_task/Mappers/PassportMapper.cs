@@ -27,13 +27,25 @@ public static class PassportMapper
         };
     }
     
+    public static Passport MapToDomain(this PassportResponseDto passportResponseDto)
+    {
+        return new Passport
+        {
+            Id = passportResponseDto.Id,
+            Type = passportResponseDto.Type,
+            Number = passportResponseDto.Number,
+            EmployeeId = passportResponseDto.EmployeeId
+        };
+    }
+    
     public static PassportResponseDto MapToDto(this Passport passport)
     {
         return new PassportResponseDto
         {
             Id = passport.Id,
             Type = passport.Type,
-            Number = passport.Number
+            Number = passport.Number,
+            EmployeeId = passport.EmployeeId
         };
     }
     
@@ -46,4 +58,13 @@ public static class PassportMapper
             Number = passport.Number,
         };
     }
+    
+    public static DbPassport ApplyChangesFromDto(this DbPassport existingPassport, UpdatePassportRequestDto passportDto)
+    {
+        existingPassport.Type = passportDto.Type ?? existingPassport.Type;
+        existingPassport.Number = passportDto.Number ?? existingPassport.Number;
+        return existingPassport;
+    }
+
+
 }

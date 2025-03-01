@@ -11,5 +11,4 @@ public class EmployeeResponseDto
     public int CompanyId { get; set; }
     public int DepartmentId { get; set; }
     public PassportResponseDto Passport { get; set; }
-    public DepartmentResponseDto Department { get; set; }
 }

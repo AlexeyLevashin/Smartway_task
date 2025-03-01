@@ -10,7 +10,7 @@ public class M0000_InitialMigration : Migration
 {
     public override void Up()
     {
-                
+
         Create.Table("departments")
             .WithColumn("id").AsInt64().PrimaryKey().Identity().NotNullable()
             .WithColumn("name").AsString().NotNullable()

@@ -36,7 +36,24 @@ public class DapperContext:IDapperContext
         return await Execute(query => query.QueryFirstAsync<T>(queryObject.Sql, queryObject.Parameters));
     }
 
-    public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(IQueryObject queryObject, Func<T1, T2, T3, TResult> map, string splitOn = "Id")
+    public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(
+        IQueryObject queryObject, 
+        Func<T1, T2, T3, TResult> map, 
+        string splitOn = "Id")
+    {
+        return (await Execute(async query =>
+        {
+            var result = await query.QueryAsync<T1, T2, T3, TResult>(
+                queryObject.Sql,
+                (item1, item2, item3) => map(item1, item2, item3),
+                queryObject.Parameters,
+                splitOn: splitOn);
+
+            return result.ToList();
+        }));
+    }
+    
+    public async Task<List<TResult>> QueryWithJoin<T1, T2, TResult>(IQueryObject queryObject, Func<T1, T2, TResult> map, string splitOn = "Id")
     {
         return (await Execute(async query =>
         {

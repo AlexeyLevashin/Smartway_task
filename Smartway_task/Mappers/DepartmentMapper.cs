@@ -14,11 +14,6 @@ public static class DepartmentMapper
             Phone = addNewDepartmentRequestDto.Phone
         };
     }
-
-    public static Department MapToDomain(this AddDepartmentRequestDto addDepartmentRequestDto)
-    {
-        return  new Department{};
-    }
     
     public static Department MapToDomain(this DbDepartment dbDepartment)
     {

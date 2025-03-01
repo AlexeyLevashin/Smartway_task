@@ -35,8 +35,20 @@ public class EmployeeController: ControllerBase
         var res = await _employeeService.GetEmployeesByDepartmentId(employeeResponseDto.DepartmentId);
         return Ok(res);
     }
-    
-    
+
+    [HttpPut("")]
+    public async Task<IActionResult> UpdateEmployee(EmployeeUpdateRequestDto  employeeUpdateRequestDto)
+    {
+        var res = await _employeeService.UpdateEmployee(employeeUpdateRequestDto );
+        return Ok(res);
+    }
+
+    [HttpDelete("")]
+    public async Task<IActionResult> DeleteEmployee(EmployeeResponseDto employeeResponseDto)
+    {
+        await _employeeService.DeleteEmployee(employeeResponseDto.Id);
+        return Ok();
+    }
     
     
     

@@ -9,6 +9,5 @@ public class Employee
     public int CompanyId { get; set; }
     public int DepartmentId { get; set; }
     public Passport Passport { get; set; }
-    public Department Department { get; set; }
     
 }

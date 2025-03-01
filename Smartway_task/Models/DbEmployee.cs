@@ -9,5 +9,4 @@ public class DbEmployee
     public int CompanyId { get; set; }
     public int DepartmentId { get; set; }
     public DbPassport DbPassport { get; set; }
-    public DbDepartment DbDepartment { get; set; }
 }

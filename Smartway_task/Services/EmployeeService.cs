@@ -31,34 +31,56 @@ public class EmployeeService:IEmployeeService
                 Phone = addNewEmployeeRequestDto.Phone,
                 CompanyId = addNewEmployeeRequestDto.CompanyId,
                 DepartmentId = addNewEmployeeRequestDto.DepartmentId,
-                DbPassport = addNewEmployeeRequestDto.NewPassport.MapToDomain().MapToDb(),
-                DbDepartment = addNewEmployeeRequestDto.NewDepartment.MapToDomain().MapToDb()
+                DbPassport = addNewEmployeeRequestDto.NewPassport.MapToDomain().MapToDb()
             })).MapToDomain().MapToDto();
     }
 
-    public async Task<List<EmployeeResponseDto>> GetEmployeesByCompanyId(int companyId)
+    public async Task<List<EmployeeWithDepartmentResponseDto>> GetEmployeesByCompanyId(int companyId)
     {
-        return ( await _employeeRepository.GetEmployeeByCompanyId(companyId)).MapToDomain().MapToDto();
+        var res = await _employeeRepository.GetEmployeeByCompanyId(companyId);
+        return res.MapToDto();
     }
 
-    public async Task<List<EmployeeResponseDto>> GetEmployeesByDepartmentId(int departmentId)
+    public async Task<List<EmployeeWithDepartmentResponseDto>> GetEmployeesByDepartmentId(int departmentId)
     {
-        return (await _employeeRepository.GetEmployeeByDepartmentId(departmentId)).MapToDomain().MapToDto();
+        var res = await _employeeRepository.GetEmployeeByDepartmentId(departmentId);
+        return res.MapToDto();
     }
+
+    public async Task<DbEmployee> UpdateEmployee(EmployeeUpdateRequestDto employeeUpdateRequestDto)
+    {
+        var existingEmployeeDb = await _employeeRepository.GetEmployeeById(employeeUpdateRequestDto.Id);
+        if (existingEmployeeDb is null)
+        {
+            throw new EmployeeIsNotExistingException("Сотрудника с данным id не существует");
+        }
         
-    
+
+        var existingEmployeeDomain = existingEmployeeDb.MapToDomainUpd();
+
+
+        var updatedEmployeeDb = existingEmployeeDomain.ApplyChangesFromDto(employeeUpdateRequestDto);
+        updatedEmployeeDb = await _employeeRepository.UpdateEmployee(updatedEmployeeDb);
+
+        return updatedEmployeeDb;
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+    }
+
+    public async Task DeleteEmployee(int id)
+    {
+        var existingEmployeeDb = await _employeeRepository.GetEmployeeById(id);
+        if (existingEmployeeDb is null)
+        {
+            throw new EmployeeIsNotExistingException("Сотрудника с данным id не существует");
+        }
+
+        await _employeeRepository.DeleteEmployee(id);
+    }
+
+
+
+
+
 }
+    
