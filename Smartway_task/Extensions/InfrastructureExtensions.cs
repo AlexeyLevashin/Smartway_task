@@ -20,6 +20,7 @@ public static class InfrastructureExtensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IPassportRepository, PassportRepository>();
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         return services;
     }

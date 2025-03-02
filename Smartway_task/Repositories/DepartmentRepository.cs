@@ -5,7 +5,7 @@ using Smartway_task.Repositories.Interfaces;
 
 namespace Smartway_task.Repositories;
 
-public class DepartmentRepository:IDepartmentRepository
+public class DepartmentRepository : IDepartmentRepository
 {
     private readonly IDapperContext _dapperContext;
 
@@ -13,12 +13,13 @@ public class DepartmentRepository:IDepartmentRepository
     {
         _dapperContext = dapperContext;
     }
+
     public async Task<DbDepartment> AddDepartment(DbDepartment department)
     {
         var queryObject = new QueryObject(
             @"INSERT INTO departments (Name, Phone) VALUES (@Name, @Phone)
-                RETURNING Id, Name, Phone",new { department.Name, department.Phone });
-        
+                RETURNING Id, Name, Phone", new { department.Name, department.Phone });
+
         return await _dapperContext.CommandWithResponse<DbDepartment>(queryObject);
     }
 
@@ -30,7 +31,7 @@ public class DepartmentRepository:IDepartmentRepository
                 WHERE phone = @phone", new { phone });
         return await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
     }
-    
+
     public async Task<DbDepartment?> GetDepartmentById(int id)
     {
         var queryObject = new QueryObject(

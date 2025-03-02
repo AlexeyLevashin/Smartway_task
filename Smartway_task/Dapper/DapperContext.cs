@@ -6,19 +6,26 @@ using Smartway_task.Dapper.Interfaces.Settings;
 
 namespace Smartway_task.Dapper;
 
-public class DapperContext:IDapperContext
+public class DapperContext : IDapperContext
 {
     private readonly IDapperSettings _dapperSettings;
+    private NpgsqlConnection _connection;
 
     public DapperContext(IDapperSettings dapperSettings)
     {
         _dapperSettings = dapperSettings;
+        _connection = new NpgsqlConnection(_dapperSettings.ConnectionString);
     }
 
+    public async Task<IDbTransaction> BeginTransaction()
+    {
+        await _connection.OpenAsync();
+        return await _connection.BeginTransactionAsync();
+    }
 
     public async Task<T?> FirstOrDefault<T>(IQueryObject queryObject)
     {
-        return await Execute (query => query.QueryFirstOrDefaultAsync<T>(queryObject.Sql, queryObject.Parameters));
+        return await Execute(query => query.QueryFirstOrDefaultAsync<T>(queryObject.Sql, queryObject.Parameters));
     }
 
     public async Task<List<T>> ListOrEmpty<T>(IQueryObject queryObject)
@@ -26,19 +33,19 @@ public class DapperContext:IDapperContext
         return (await Execute(query => query.QueryAsync<T>(queryObject.Sql, queryObject.Parameters))).ToList();
     }
 
-    public async Task Command(IQueryObject queryObject)
+    public async Task Command(IQueryObject queryObject, IDbTransaction? transaction = null)
     {
-        await Execute(query => query.ExecuteAsync(queryObject.Sql, queryObject.Parameters));
+        await Execute(query => query.ExecuteAsync(queryObject.Sql, queryObject.Parameters, transaction));
     }
 
-    public async Task<T> CommandWithResponse<T>(IQueryObject queryObject)
+    public async Task<T> CommandWithResponse<T>(IQueryObject queryObject, IDbTransaction? transaction = null)
     {
-        return await Execute(query => query.QueryFirstAsync<T>(queryObject.Sql, queryObject.Parameters));
+        return await Execute(query => query.QueryFirstAsync<T>(queryObject.Sql, queryObject.Parameters, transaction));
     }
 
     public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(
-        IQueryObject queryObject, 
-        Func<T1, T2, T3, TResult> map, 
+        IQueryObject queryObject,
+        Func<T1, T2, T3, TResult> map,
         string splitOn = "Id")
     {
         return (await Execute(async query =>
@@ -52,20 +59,6 @@ public class DapperContext:IDapperContext
             return result.ToList();
         }));
     }
-    
-    public async Task<List<TResult>> QueryWithJoin<T1, T2, TResult>(IQueryObject queryObject, Func<T1, T2, TResult> map, string splitOn = "Id")
-    {
-        return (await Execute(async query =>
-        {
-            var result = await query.QueryAsync(
-                queryObject.Sql,
-                map,
-                queryObject.Parameters,
-                splitOn: splitOn);
-
-            return result.ToList();
-        }));
-    }
 
     private async Task<T> Execute<T>(Func<IDbConnection, Task<T>> query)
     {
@@ -73,45 +66,5 @@ public class DapperContext:IDapperContext
         var res = await query(connection);
         await connection.CloseAsync();
         return res;
-    }
-    
-    public async Task<T> ExecuteInTransaction<T>(Func<IDbConnection, IDbTransaction, Task<T>> operation)
-    {
-        using var connection = new NpgsqlConnection(_dapperSettings.ConnectionString);
-        await connection.OpenAsync();
-
-        using var transaction = connection.BeginTransaction();
-
-        try
-        {
-            var result = await operation(connection, transaction);
-            await transaction.CommitAsync();
-            return result;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-    
-    
-    public async Task ExecuteInTransaction(Func<IDbConnection, IDbTransaction, Task> operation)
-    {
-        using var connection = new NpgsqlConnection(_dapperSettings.ConnectionString);
-        await connection.OpenAsync();
-
-        using var transaction = connection.BeginTransaction();
-
-        try
-        {
-            await operation(connection, transaction); 
-            await transaction.CommitAsync();
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
     }
 }

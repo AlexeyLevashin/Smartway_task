@@ -1,4 +1,3 @@
-using Smartway_task.DTO;
 using Smartway_task.NewDto.Department.Requests;
 using Smartway_task.NewDto.Department.Responses;
 

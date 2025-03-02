@@ -15,7 +15,7 @@ public static class NewPassportMapper
             Number = dto.Number
         };
     }
-    
+
     public static PassportResponse MapToDto(this DbPassport dbPassport)
     {
         return new PassportResponse
@@ -25,7 +25,7 @@ public static class NewPassportMapper
             Number = dbPassport.Number
         };
     }
-    
+
     public static PassportResponse MapToDto(this Passport passport)
     {
         return new PassportResponse
@@ -36,7 +36,7 @@ public static class NewPassportMapper
             EmployeeId = passport.EmployeeId
         };
     }
-    
+
     public static Passport MapToDomain(this DbPassport dbpassport)
     {
         return new Passport
@@ -47,7 +47,7 @@ public static class NewPassportMapper
             EmployeeId = dbpassport.EmployeeId
         };
     }
-    
+
     public static DbPassport ApplyChangesFromDto(this DbPassport existingPassport, PassportUpdateRequest passportDto)
     {
         existingPassport.Type = passportDto.Type ?? existingPassport.Type;

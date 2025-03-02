@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using Smartway_task.DTO;
 using Smartway_task.NewDto.Employee.Requests;
 using Smartway_task.Services.Interfaces;
 
 namespace Smartway_task.Controllers;
 
+[ApiController]
 [Route("api")]
-public class EmployeeController: ControllerBase
+public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeService _employeeService;
 
@@ -14,7 +14,7 @@ public class EmployeeController: ControllerBase
     {
         _employeeService = employeeService;
     }
-    
+
     [HttpPost("/employees")]
     public async Task<IActionResult> AddEmployee(AddNewEmployeeRequest addNewEmployeeRequest)
     {
@@ -37,7 +37,7 @@ public class EmployeeController: ControllerBase
     }
 
     [HttpPut("/employees/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, EmployeeUpdateRequest  employeeUpdateRequestDto)
+    public async Task<IActionResult> UpdateEmployee(int id, EmployeeUpdateRequest employeeUpdateRequestDto)
     {
         var res = await _employeeService.UpdateEmployee(employeeUpdateRequestDto, id);
         return Ok(res);
@@ -49,7 +49,4 @@ public class EmployeeController: ControllerBase
         await _employeeService.DeleteEmployee(id);
         return Ok();
     }
-    
-    
-    
 }

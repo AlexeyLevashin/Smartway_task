@@ -1,4 +1,3 @@
-using Smartway_task.DTO;
 using Smartway_task.Exceptions;
 using Smartway_task.Mappers;
 using Smartway_task.Models;
@@ -9,7 +8,7 @@ using Smartway_task.Services.Interfaces;
 
 namespace Smartway_task.Services;
 
-public class DepartmentService:IDepartmentService
+public class DepartmentService : IDepartmentService
 {
     private readonly IDepartmentRepository _departmentRepository;
 
@@ -22,7 +21,7 @@ public class DepartmentService:IDepartmentService
     {
         if (await _departmentRepository.GetDepartmentByPhone(departmentRequest.Phone) is not null)
         {
-            throw new DepartmentIsExistingException("Данный номер отдела уже занят");
+            throw new DepartmentIsExistingException("Данный номер телефона отдела уже занят");
         }
 
         return (await _departmentRepository.AddDepartment(

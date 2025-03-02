@@ -1,4 +1,3 @@
-using Smartway_task.DTO;
 using Smartway_task.Models;
 using Smartway_task.NewDto.Employee.Requests;
 using Smartway_task.NewDto.Employee.Responses;
@@ -18,7 +17,7 @@ public static class NewEmployeeMapper
             DepartmentId = dto.DepartmentId,
         };
     }
-    
+
     public static EmployeeResponse MapToDto(this DbEmployee dbEmployee)
     {
         return new EmployeeResponse
@@ -32,8 +31,9 @@ public static class NewEmployeeMapper
             Passport = dbEmployee.DbPassport.MapToDto()
         };
     }
-    
-    public static List<EmployeeWithDepartmentResponse> MapToDto(this List<(DbEmployee, DbPassport, DbDepartment)> employees)
+
+    public static List<EmployeeWithDepartmentResponse> MapToDto(
+        this List<(DbEmployee, DbPassport, DbDepartment)> employees)
     {
         return employees.Select(x => x.Item1.MapToDto(x.Item3)).ToList();
     }
@@ -56,7 +56,6 @@ public static class NewEmployeeMapper
 
     public static DbEmployee ApplyChangesFromDto(this DbEmployee existingDbEmployee, EmployeeUpdateRequest employeeDto)
     {
-        
         existingDbEmployee.Name = employeeDto.Name ?? existingDbEmployee.Name;
         existingDbEmployee.Surname = employeeDto.Surname ?? existingDbEmployee.Surname;
         existingDbEmployee.Phone = employeeDto.Phone ?? existingDbEmployee.Phone;
@@ -69,10 +68,10 @@ public static class NewEmployeeMapper
             {
                 existingDbEmployee.DbPassport = new DbPassport();
             }
-            existingDbEmployee.DbPassport.ApplyChangesFromDto(employeeDto.Passport); 
+
+            existingDbEmployee.DbPassport.ApplyChangesFromDto(employeeDto.Passport);
         }
+
         return existingDbEmployee;
     }
-
-
 }

@@ -9,5 +9,6 @@ public class DapperSettings : IDapperSettings
         ConnectionString = configuration["ConnectionStrings:Database"]
                            ?? throw new ArgumentException("CoonectionString in appsettings is missing");
     }
+
     public string ConnectionString { get; }
 }

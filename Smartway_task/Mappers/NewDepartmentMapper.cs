@@ -15,7 +15,7 @@ public static class NewDepartmentMapper
             Phone = dbDepartment.Phone
         };
     }
-    
+
     public static DepartmentResponse MapToDto(this Department department)
     {
         return new DepartmentResponse
