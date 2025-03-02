@@ -2,6 +2,8 @@ using Smartway_task.DTO;
 using Smartway_task.Exceptions;
 using Smartway_task.Mappers;
 using Smartway_task.Models;
+using Smartway_task.NewDto.Department.Requests;
+using Smartway_task.NewDto.Department.Responses;
 using Smartway_task.Repositories.Interfaces;
 using Smartway_task.Services.Interfaces;
 
@@ -9,25 +11,25 @@ namespace Smartway_task.Services;
 
 public class DepartmentService:IDepartmentService
 {
-    public IDepartmentRepository _departmentRepository;
+    private readonly IDepartmentRepository _departmentRepository;
 
     public DepartmentService(IDepartmentRepository departmentRepository)
     {
         _departmentRepository = departmentRepository;
     }
 
-    public async Task<DepartmentResponseDto> AddDepartment(AddNewDepartmentRequestDto addNewDepartmentRequestDto)
+    public async Task<DepartmentResponse> AddDepartment(DepartmentRequest departmentRequest)
     {
-        if (await _departmentRepository.GetDepartmentByPhone(addNewDepartmentRequestDto.Phone) is not null)
+        if (await _departmentRepository.GetDepartmentByPhone(departmentRequest.Phone) is not null)
         {
-            throw new DepartmentIsExistingException("Данный отдел уже существует");
+            throw new DepartmentIsExistingException("Данный номер отдела уже занят");
         }
 
         return (await _departmentRepository.AddDepartment(
             new DbDepartment
             {
-                Name = addNewDepartmentRequestDto.Name,
-                Phone = addNewDepartmentRequestDto.Phone
+                Name = departmentRequest.Name,
+                Phone = departmentRequest.Phone
             })).MapToDomain().MapToDto();
     }
 }

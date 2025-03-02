@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Smartway_task.DTO;
+using Smartway_task.NewDto.Department.Requests;
 using Smartway_task.Services.Interfaces;
 
 namespace Smartway_task.Controllers;
 
+
 [Route("api/departments")]
 public class DepartmentController: ControllerBase
 {
-    public IDepartmentService _departmentService;
+    private readonly IDepartmentService _departmentService;
 
     public DepartmentController(IDepartmentService departmentService)
     {
@@ -15,9 +17,9 @@ public class DepartmentController: ControllerBase
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> AddDepartment(AddNewDepartmentRequestDto addNewDepartmentRequestDto)
+    public async Task<IActionResult> AddDepartment(DepartmentRequest departmentRequest)
     {
-        var res = await _departmentService.AddDepartment(addNewDepartmentRequestDto);
+        var res = await _departmentService.AddDepartment(departmentRequest);
         return Ok(res);
     }
     

@@ -11,6 +11,7 @@ public interface IDapperContext
     public Task Command(IQueryObject queryObject);
     public Task<T> CommandWithResponse<T>(IQueryObject queryObject);
     public Task<T> ExecuteInTransaction<T>(Func<IDbConnection, IDbTransaction, Task<T>> operation);
+    public Task ExecuteInTransaction(Func<IDbConnection, IDbTransaction, Task> operation);
     public Task<List<TResult>> QueryWithJoin<T1, T2, TResult>(
         IQueryObject queryObject,
         Func<T1, T2, TResult> map,

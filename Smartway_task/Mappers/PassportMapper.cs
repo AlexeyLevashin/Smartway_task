@@ -16,16 +16,16 @@ public static class PassportMapper
     }
     
     
-    public static Passport MapToDomain(this DbPassport dbpassport)
-    {
-        return new Passport
-        {
-            Id = dbpassport.Id,
-            Type = dbpassport.Type,
-            Number = dbpassport.Number,
-            EmployeeId = dbpassport.EmployeeId
-        };
-    }
+    // public static Passport MapToDomain(this DbPassport dbpassport)
+    // {
+    //     return new Passport
+    //     {
+    //         Id = dbpassport.Id,
+    //         Type = dbpassport.Type,
+    //         Number = dbpassport.Number,
+    //         EmployeeId = dbpassport.EmployeeId
+    //     };
+    // }
     
     public static Passport MapToDomain(this PassportResponseDto passportResponseDto)
     {
@@ -38,16 +38,16 @@ public static class PassportMapper
         };
     }
     
-    public static PassportResponseDto MapToDto(this Passport passport)
-    {
-        return new PassportResponseDto
-        {
-            Id = passport.Id,
-            Type = passport.Type,
-            Number = passport.Number,
-            EmployeeId = passport.EmployeeId
-        };
-    }
+    // public static PassportResponseDto MapToDto(this Passport passport)
+    // {
+    //     return new PassportResponseDto
+    //     {
+    //         Id = passport.Id,
+    //         Type = passport.Type,
+    //         Number = passport.Number,
+    //         EmployeeId = passport.EmployeeId
+    //     };
+    // }
     
     public static DbPassport MapToDb(this Passport passport)
     {
@@ -65,6 +65,7 @@ public static class PassportMapper
         existingPassport.Number = passportDto.Number ?? existingPassport.Number;
         return existingPassport;
     }
+    
 
 
 }

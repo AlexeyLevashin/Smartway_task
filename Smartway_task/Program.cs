@@ -2,18 +2,15 @@ using FluentMigrator.Runner;
 using Smartway_task.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-//Todo 1 в репозиториях addpassport и тп была обработка ситуаций res=0
 
-//Todo 2 убрать * в sql запросах
-//Todo 3 убрать sql из кода
 if (builder.Environment.IsDevelopment())
 {
     DotNetEnv.Env.Load("../.env");
 }
-var connectionString = builder.Configuration["ConnectionStrings:Database"];
+
 
 builder.Services.AddSwaggerGen();
-builder.Services.AddMigrations(connectionString);
+builder.Services.AddMigrations(builder.Configuration);
 builder.Services.AddDapper();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
@@ -29,9 +26,5 @@ app.MapControllers();
 app.MapSwagger();
 app.UseSwaggerUI();
 
-// app.UseCors(x => x.AllowAnyMethod()
-//     .AllowAnyHeader()
-//     .SetIsOriginAllowed(origin => true) 
-//     .AllowCredentials());
 app.Run();
 

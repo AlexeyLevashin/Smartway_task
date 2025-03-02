@@ -1,52 +1,52 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Smartway_task.DTO;
+using Smartway_task.NewDto.Employee.Requests;
 using Smartway_task.Services.Interfaces;
 
 namespace Smartway_task.Controllers;
 
-[Route("api/emloyees")]
+[Route("api")]
 public class EmployeeController: ControllerBase
 {
-    public IEmployeeService _employeeService;
+    private readonly IEmployeeService _employeeService;
 
     public EmployeeController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
     }
-
-    [HttpPost("")]
-    public async Task<IActionResult> AddEmployee(AddNewEmployeeRequestDto addNewEmployeeRequestDto)
+    
+    [HttpPost("/employees")]
+    public async Task<IActionResult> AddEmployee(AddNewEmployeeRequest addNewEmployeeRequest)
     {
-        var res = await _employeeService.AddEmployee(addNewEmployeeRequestDto);
+        var res = await _employeeService.AddEmployee(addNewEmployeeRequest);
         return Ok(res.Id);
     }
 
-    [HttpGet("byCompanyId")]
-    public async Task<IActionResult> GetEmployeesByCompanyId(EmployeeResponseDto employeeResponseDto)
+    [HttpGet("/companies/{id}/employees")]
+    public async Task<IActionResult> GetEmployeesByCompanyId(int id)
     {
-        var res = await _employeeService.GetEmployeesByCompanyId(employeeResponseDto.CompanyId);
+        var res = await _employeeService.GetEmployeesByCompanyId(id);
         return Ok(res);
     }
 
-    [HttpGet("byDepartmentId")]
-    public async Task<IActionResult> GetEmplooyeesByDepartmentId(EmployeeResponseDto employeeResponseDto)
+    [HttpGet("/departments/{id}/employees")]
+    public async Task<IActionResult> GetEmplooyeesByDepartmentId(int id)
     {
-        var res = await _employeeService.GetEmployeesByDepartmentId(employeeResponseDto.DepartmentId);
+        var res = await _employeeService.GetEmployeesByDepartmentId(id);
         return Ok(res);
     }
 
-    [HttpPut("")]
-    public async Task<IActionResult> UpdateEmployee(EmployeeUpdateRequestDto  employeeUpdateRequestDto)
+    [HttpPut("/employees/{id}")]
+    public async Task<IActionResult> UpdateEmployee(int id, EmployeeUpdateRequest  employeeUpdateRequestDto)
     {
-        var res = await _employeeService.UpdateEmployee(employeeUpdateRequestDto );
+        var res = await _employeeService.UpdateEmployee(employeeUpdateRequestDto, id);
         return Ok(res);
     }
 
-    [HttpDelete("")]
-    public async Task<IActionResult> DeleteEmployee(EmployeeResponseDto employeeResponseDto)
+    [HttpDelete("/employees/{id}")]
+    public async Task<IActionResult> DeleteEmployee(int id)
     {
-        await _employeeService.DeleteEmployee(employeeResponseDto.Id);
+        await _employeeService.DeleteEmployee(id);
         return Ok();
     }
     

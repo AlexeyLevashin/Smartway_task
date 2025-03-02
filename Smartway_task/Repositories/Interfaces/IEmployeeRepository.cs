@@ -9,8 +9,8 @@ public interface IEmployeeRepository
     public Task<DbEmployee?> GetEmployeeById(int id);
     public Task<List<(DbEmployee, DbPassport, DbDepartment)>> GetEmployeeByCompanyId(int companyId);
     public Task<List<(DbEmployee, DbPassport, DbDepartment)>> GetEmployeeByDepartmentId(int departmentId);
-    public Task<DbEmployee> UpdateEmployee(DbEmployee employee);
-    public Task<bool> DeleteEmployee(int employeeId);
+    public Task<DbEmployee> UpdateEmployee(DbEmployee employee, int id);
+    public Task DeleteEmployee(int employeeId);
 
 
 }

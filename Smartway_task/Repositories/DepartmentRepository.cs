@@ -7,7 +7,7 @@ namespace Smartway_task.Repositories;
 
 public class DepartmentRepository:IDepartmentRepository
 {
-    public IDapperContext _dapperContext;
+    private readonly IDapperContext _dapperContext;
 
     public DepartmentRepository(IDapperContext dapperContext)
     {
@@ -16,7 +16,7 @@ public class DepartmentRepository:IDepartmentRepository
     public async Task<DbDepartment> AddDepartment(DbDepartment department)
     {
         var queryObject = new QueryObject(
-            @"INSERT INTO Departments (Name, Phone) VALUES (@Name, @Phone)
+            @"INSERT INTO departments (Name, Phone) VALUES (@Name, @Phone)
                 RETURNING Id, Name, Phone",new { department.Name, department.Phone });
         
         return await _dapperContext.CommandWithResponse<DbDepartment>(queryObject);
@@ -26,7 +26,7 @@ public class DepartmentRepository:IDepartmentRepository
     {
         var queryObject = new QueryObject(
             @"SELECT id, name as ""Name"", phone as ""Phone""
-                FROM Departments 
+                FROM departments 
                 WHERE phone = @phone", new { phone });
         return await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
     }
@@ -35,7 +35,7 @@ public class DepartmentRepository:IDepartmentRepository
     {
         var queryObject = new QueryObject(
             @"SELECT id, name as ""Name"", phone as ""Phone""
-                FROM Departments 
+                FROM departments 
                 WHERE id = @id", new { id });
         return await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
     }

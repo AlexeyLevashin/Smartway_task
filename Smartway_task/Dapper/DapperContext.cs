@@ -8,7 +8,7 @@ namespace Smartway_task.Dapper;
 
 public class DapperContext:IDapperContext
 {
-    private IDapperSettings _dapperSettings;
+    private readonly IDapperSettings _dapperSettings;
 
     public DapperContext(IDapperSettings dapperSettings)
     {
@@ -87,6 +87,26 @@ public class DapperContext:IDapperContext
             var result = await operation(connection, transaction);
             await transaction.CommitAsync();
             return result;
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+    
+    
+    public async Task ExecuteInTransaction(Func<IDbConnection, IDbTransaction, Task> operation)
+    {
+        using var connection = new NpgsqlConnection(_dapperSettings.ConnectionString);
+        await connection.OpenAsync();
+
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            await operation(connection, transaction); 
+            await transaction.CommitAsync();
         }
         catch (Exception ex)
         {

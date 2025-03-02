@@ -12,7 +12,7 @@ public static class InfrastructureExtensions
 {
     public static IServiceCollection AddDapper(this IServiceCollection services)
     {
-        services.AddScoped<IDapperSettings, DapperSettings>();
+        services.AddSingleton<IDapperSettings, DapperSettings>();
         services.AddScoped<IDapperContext, DapperContext>();
         return services;
     }
@@ -24,11 +24,11 @@ public static class InfrastructureExtensions
         return services;
     }
     
-    public static IServiceCollection AddMigrations(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddMigrations(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddFluentMigratorCore().ConfigureRunner(rb =>
                 rb.AddPostgres()
-                    .WithGlobalConnectionString(connectionString)
+                    .WithGlobalConnectionString(configuration.GetConnectionString("Database"))
                     .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
             .AddLogging(lb => lb.AddFluentMigratorConsole())
             .BuildServiceProvider(false);

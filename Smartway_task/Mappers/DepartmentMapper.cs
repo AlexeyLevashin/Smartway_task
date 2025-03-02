@@ -15,25 +15,25 @@ public static class DepartmentMapper
         };
     }
     
-    public static Department MapToDomain(this DbDepartment dbDepartment)
-    {
-        return new Department
-        {
-            Id = dbDepartment.Id,
-            Name = dbDepartment.Name,
-            Phone = dbDepartment.Phone
-        };
-    }
-    
-    public static DepartmentResponseDto MapToDto(this Department department)
-    {
-        return new DepartmentResponseDto
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Phone = department.Phone
-        };
-    }
+    // public static Department MapToDomain(this DbDepartment dbDepartment)
+    // {
+    //     return new Department
+    //     {
+    //         Id = dbDepartment.Id,
+    //         Name = dbDepartment.Name,
+    //         Phone = dbDepartment.Phone
+    //     };
+    // }
+    //
+    // public static DepartmentResponseDto MapToDto(this Department department)
+    // {
+    //     return new DepartmentResponseDto
+    //     {
+    //         Id = department.Id,
+    //         Name = department.Name,
+    //         Phone = department.Phone
+    //     };
+    // }
     
     
     

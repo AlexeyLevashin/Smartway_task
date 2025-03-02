@@ -25,43 +25,41 @@ public static class EmployeeMapper
         return dbEmployees.Select(i => i.MapToDomain()).ToList();
     }
     
-    public static EmployeeResponseDto MapToDto(this Employee employee)
-    {
-        return new EmployeeResponseDto
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            Surname = employee.Surname,
-            Phone = employee.Phone,
-            CompanyId = employee.CompanyId,
-            DepartmentId = employee.DepartmentId,
-            Passport = employee.Passport.MapToDto(),
+    // public static EmployeeResponseDto MapToDto(this Employee employee)
+    // {
+    //     return new EmployeeResponseDto
+    //     {
+    //         Id = employee.Id,
+    //         Name = employee.Name,
+    //         Surname = employee.Surname,
+    //         Phone = employee.Phone,
+    //         CompanyId = employee.CompanyId,
+    //         DepartmentId = employee.DepartmentId,
+    //         Passport = employee.Passport.MapToDto(),
+    //
+    //     };
+    // }
+    // public static List<EmployeeWithDepartmentResponseDto> MapToDto(this List<(DbEmployee, DbPassport, DbDepartment)> employees)
+    // {
+    //     return employees.Select(x => x.Item1.MapToDto(x.Item3)).ToList();
+    // }
 
-        };
-    }
-    public static List<EmployeeWithDepartmentResponseDto> MapToDto(this List<(DbEmployee, DbPassport, DbDepartment)> employees)
-    {
-        return employees.Select(x => x.Item1.MapToDto(x.Item3)).ToList();
-    }
-
-    public static EmployeeWithDepartmentResponseDto MapToDto(this DbEmployee employee, DbDepartment department)
-    {
-        return new EmployeeWithDepartmentResponseDto
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            Surname = employee.Surname,
-            Phone = employee.Phone,
-            CompanyId = employee.CompanyId,
-            DepartmentId = employee.DepartmentId,
-            Passport = employee.DbPassport.MapToDomain().MapToDto(),
-            Department = department.MapToDomain().MapToDto()
-        };
-    }
+    // public static EmployeeWithDepartmentResponseDto MapToDto(this DbEmployee employee, DbDepartment department)
+    // {
+    //     return new EmployeeWithDepartmentResponseDto
+    //     {
+    //         Id = employee.Id,
+    //         Name = employee.Name,
+    //         Surname = employee.Surname,
+    //         Phone = employee.Phone,
+    //         CompanyId = employee.CompanyId,
+    //         DepartmentId = employee.DepartmentId,
+    //         Passport = employee.DbPassport.MapToDomain().MapToDto(),
+    //         Department = department.MapToDomain().MapToDto()
+    //     };
+    // }
     
     
-
-
     public static Employee MapToDomain(this EmployeeWithDepartmentResponseDto employeeWithDepartmentResponseDto)
     {
         return new Employee
@@ -81,10 +79,10 @@ public static class EmployeeMapper
     }
     
     
-    public static List<EmployeeResponseDto> MapToDto(this List<Employee> employees)
-    {
-        return employees.Select(i => i.MapToDto()).ToList();
-    }
+    // public static List<EmployeeResponseDto> MapToDto(this List<Employee> employees)
+    // {
+    //     return employees.Select(i => i.MapToDto()).ToList();
+    // }
 
 
 
@@ -134,27 +132,11 @@ public static class EmployeeMapper
 
         if (employeeDto.Passport != null)
         {
-            if (dbEmployee.DbPassport == null)
-            {
-                dbEmployee.DbPassport = new DbPassport();
-            }
+
             dbEmployee.DbPassport = dbEmployee.DbPassport.ApplyChangesFromDto(employeeDto.Passport); 
         }
         return dbEmployee;
     }
-
-    public static Employee MapToDomainUpd(this DbEmployee dbEmployee)
-    {
-        return new Employee
-        {
-            Id = dbEmployee.Id,
-            Name = dbEmployee.Name,
-            Surname = dbEmployee.Surname,
-            Phone = dbEmployee.Phone,
-            CompanyId = dbEmployee.CompanyId,
-            DepartmentId = dbEmployee.DepartmentId,
-            Passport = dbEmployee.DbPassport?.MapToDomain()
-        };
-    }
+    
     
 }
