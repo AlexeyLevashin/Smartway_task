@@ -42,6 +42,7 @@ public class DapperContext : IDapperContext
     {
         return await Execute(query => query.QueryFirstAsync<T>(queryObject.Sql, queryObject.Parameters, transaction));
     }
+    
 
     public async Task<List<TResult>> QueryWithJoin<T1, T2, T3, TResult>(
         IQueryObject queryObject,

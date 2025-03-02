@@ -39,15 +39,30 @@ public class EmployeeRepository : IEmployeeRepository
     }
 
 
-    public async Task<DbEmployee?> GetEmployeeByPhone(string phone)
+    public async Task<string?> GetEmployeeByPhone(string? phone)
     {
         var queryObject = new QueryObject(
-            @"SELECT id, name as ""Name"", surname as ""Surname"", phone as ""Phone"", companyid as ""CompanyId"", departmentid as ""DepartmentId""
-                     FROM employees
-                     WHERE phone = @phone",
+            @"SELECT 1 FROM employees WHERE phone = @phone LIMIT 1",
             new { phone });
 
-        return await _dapperContext.FirstOrDefault<DbEmployee>(queryObject);
+        return await _dapperContext.FirstOrDefault<string>(queryObject);
+    }
+
+    public async Task<int> GetEmployeeIdByPhone(string? phone)
+    {
+        var queryObject = new QueryObject(
+            @"SELECT id FROM employees WHERE phone = @phone LIMIT 1",
+            new { phone });
+
+        return await _dapperContext.FirstOrDefault<int>(queryObject);
+    }
+    
+    public async Task<int?> CheckExistingCompanyId(int companyId)
+    {
+        var queryObject = new QueryObject(
+            @"SELECT 1 FROM employees WHERE companyid = @companyId LIMIT 1",
+            new { companyid = companyId });
+        return await _dapperContext.FirstOrDefault<int?>(queryObject);
     }
 
 

@@ -43,4 +43,22 @@ public class PassportRepository : IPassportRepository
 
         await _dapperContext.Command(queryObject, transaction);
     }
+
+    public async Task<string?> GetEmployeeByPassportNumber(string? number)
+    {
+        var queryObject = new QueryObject(
+            @"SELECT 1 FROM passports WHERE number = @number LIMIT 1",
+            new {Number = number });
+        return await _dapperContext.FirstOrDefault<string>(queryObject);
+        
+    }
+
+    public async Task<int> GetEmployeeIdByPasportNumber(string? number)
+    {
+        var queryObject = new QueryObject(
+            @"SELECT employeeid FROM passports WHERE number = @number LIMIT 1",
+            new { number });
+
+        return await _dapperContext.FirstOrDefault<int>(queryObject);
+    }
 }

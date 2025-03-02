@@ -12,11 +12,14 @@ public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IPassportRepository _passportRepository;
+    private readonly IDepartmentRepository _departmentRepository;
 
-    public EmployeeService(IEmployeeRepository employeeRepository, IPassportRepository passportRepository)
+    public EmployeeService(IEmployeeRepository employeeRepository, IPassportRepository passportRepository,
+        IDepartmentRepository departmentRepository)
     {
         _employeeRepository = employeeRepository;
         _passportRepository = passportRepository;
+        _departmentRepository = departmentRepository;
     }
 
 
@@ -26,6 +29,17 @@ public class EmployeeService : IEmployeeService
         {
             throw new PhoneIsExistingException("Сотрудник с данным номером телефона уже существует");
         }
+
+        if (await _departmentRepository.CheckExistingDepartmentId(addNewEmployeeRequest.DepartmentId) is null)
+        {
+            throw new DepartmentIdIsNotExistingException("Отдел с данным id не существует");
+        }
+
+        if (await _passportRepository.GetEmployeeByPassportNumber(addNewEmployeeRequest.NewPassport.Number) is not null)
+        {
+            throw new PassportNumberIsExistingException("Сотрудник с данным номером паспорта уже существует");
+        }
+
 
         DbEmployee dbEmployee = addNewEmployeeRequest.MapToDb();
 
@@ -51,16 +65,25 @@ public class EmployeeService : IEmployeeService
 
     public async Task<List<EmployeeWithDepartmentResponse>> GetEmployeesByCompanyId(int companyId)
     {
+        if (await _employeeRepository.CheckExistingCompanyId(companyId) is null)
+        {
+            throw new CompanyIdIsNotExistingException("Компания с данным id не существует");
+        }
+
         var res = await _employeeRepository.GetEmployeeByCompanyId(companyId);
         return res.MapToDto();
     }
 
     public async Task<List<EmployeeWithDepartmentResponse>> GetEmployeesByDepartmentId(int departmentId)
     {
+        if (await _departmentRepository.CheckExistingDepartmentId(departmentId) is null)
+        {
+            throw new DepartmentIdIsNotExistingException("Отдел с данным id не существует");
+        }
+
         var res = await _employeeRepository.GetEmployeeByDepartmentId(departmentId);
         return res.MapToDto();
     }
-
 
     public async Task<EmployeeResponse> UpdateEmployee(EmployeeUpdateRequest employeeUpdateRequest, int id)
     {
@@ -70,6 +93,22 @@ public class EmployeeService : IEmployeeService
             throw new EmployeeIsNotExistingException("Сотрудник с данным id не существует");
         }
 
+        if (await _employeeRepository.GetEmployeeByPhone(employeeUpdateRequest.Phone) is not null)
+        {
+            if (await _employeeRepository.GetEmployeeIdByPhone(employeeUpdateRequest.Phone) != id)
+                throw new PhoneIsExistingException("Сотрудник с данным номером телефона уже существует");
+        }
+
+        if (await _departmentRepository.CheckExistingDepartmentId(employeeUpdateRequest.DepartmentId) is null)
+        {
+            throw new DepartmentIdIsNotExistingException("Отдел с данным id не существует");
+        }
+
+        if (await _passportRepository.GetEmployeeByPassportNumber(employeeUpdateRequest.Passport.Number) is not null)
+        {
+            if (await _passportRepository.GetEmployeeIdByPasportNumber(employeeUpdateRequest.Passport.Number) != id)
+                throw new PassportNumberIsExistingException("Сотрудник с данным номером паспорта уже существует");
+        }
 
         var dbEmployee = existingEmployeeDb.ApplyChangesFromDto(employeeUpdateRequest);
 

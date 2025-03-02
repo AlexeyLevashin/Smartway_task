@@ -23,21 +23,19 @@ public class DepartmentRepository : IDepartmentRepository
         return await _dapperContext.CommandWithResponse<DbDepartment>(queryObject);
     }
 
-    public async Task<DbDepartment?> GetDepartmentByPhone(string phone)
+    public async Task<int?> CheckExistingDepartmentId(int? departmentId)
     {
         var queryObject = new QueryObject(
-            @"SELECT id, name as ""Name"", phone as ""Phone""
-                FROM departments 
-                WHERE phone = @phone", new { phone });
-        return await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
+            @"SELECT 1 FROM departments WHERE id = @Id LIMIT 1",
+            new {id = departmentId });
+        return await _dapperContext.FirstOrDefault<int?>(queryObject);
     }
 
-    public async Task<DbDepartment?> GetDepartmentById(int id)
+    public async Task<string?> GetDepartmentByPhone(string phone)
     {
         var queryObject = new QueryObject(
-            @"SELECT id, name as ""Name"", phone as ""Phone""
-                FROM departments 
-                WHERE id = @id", new { id });
-        return await _dapperContext.FirstOrDefault<DbDepartment>(queryObject);
+            @"SELECT 1 FROM departments WHERE id = @Id LIMIT 1",
+            new { phone });
+        return await _dapperContext.FirstOrDefault<string>(queryObject);
     }
 }
