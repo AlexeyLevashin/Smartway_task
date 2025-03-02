@@ -13,6 +13,18 @@ services:
       - "5431:5432"             
     volumes:
       - database-pg:/var/lib/postgresql/data
+  api:
+    build:
+      context: ./
+      dockerfile: ./Api/Dockerfile
+    networks:
+      - backend
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
 
 networks:
   backend:
@@ -20,3 +32,4 @@ networks:
 
 volumes:
   database-pg:
+    
