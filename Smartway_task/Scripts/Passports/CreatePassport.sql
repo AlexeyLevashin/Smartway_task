@@ -1,0 +1,1 @@
+INSERT INTO passports (type, number, employeeid) VALUES (@type, @number, @employeeid)

@@ -6,6 +6,7 @@ using Smartway_task.Dapper.Interfaces;
 using Smartway_task.Mappers;
 using Smartway_task.Models;
 using Smartway_task.Repositories.Interfaces;
+using Smartway_task.Scripts.Employees;
 
 namespace Smartway_task.Repositories;
 
@@ -26,9 +27,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<DbEmployee> AddEmployee(DbEmployee employee, IDbTransaction? transaction = null)
     {
         var queryObject = new QueryObject(
-            @"INSERT INTO employees (name, surname, phone, companyid, departmentid) 
-                 VALUES (@name, @surname, @phone, @companyid, @departmentid)
-                 RETURNING Id as ""Id""",
+            PostgresEmployeeElement.AddEmployee,
             new { employee.Name, employee.Surname, employee.Phone, employee.CompanyId, employee.DepartmentId }
         );
 
@@ -42,7 +41,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<string?> GetEmployeeByPhone(string? phone)
     {
         var queryObject = new QueryObject(
-            @"SELECT 1 FROM employees WHERE phone = @phone LIMIT 1",
+            PostgresEmployeeElement.GetEmployeeByPhone,
             new { phone });
 
         return await _dapperContext.FirstOrDefault<string>(queryObject);
@@ -51,7 +50,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<int> GetEmployeeIdByPhone(string? phone)
     {
         var queryObject = new QueryObject(
-            @"SELECT id FROM employees WHERE phone = @phone LIMIT 1",
+            PostgresEmployeeElement.GetEmployeeIdByPhone,
             new { phone });
 
         return await _dapperContext.FirstOrDefault<int>(queryObject);
@@ -60,7 +59,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<int?> CheckExistingCompanyId(int companyId)
     {
         var queryObject = new QueryObject(
-            @"SELECT 1 FROM employees WHERE companyid = @companyId LIMIT 1",
+            PostgresEmployeeElement.CheckExistingCompanyId,
             new { companyid = companyId });
         return await _dapperContext.FirstOrDefault<int?>(queryObject);
     }
@@ -69,13 +68,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<List<(DbEmployee, DbPassport, DbDepartment)>> GetEmployeeByDepartmentId(int departmentId)
     {
         var queryObject = new QueryObject(
-            @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.companyid as ""CompanyId"", e.departmentid as ""DepartmentId"",
-                         p.id, p.type as ""Type"", p.number as ""Number"", p.employeeid as ""EmployeeId"",
-                         d.id, d.name as ""Name"", d.phone as ""Phone""
-                    FROM employees e
-                   LEFT JOIN passports p ON p.EmployeeId = e.Id 
-                   LEFT JOIN departments d ON d.Id = e.DepartmentId
-                   WHERE e.departmentid = @departmentId", new { departmentId });
+            PostgresEmployeeElement.GetEmployeeByDepartmentId, new { departmentId });
 
         var employeeResults = await _dapperContext
             .QueryWithJoin<DbEmployee, DbPassport, DbDepartment, (DbEmployee, DbPassport, DbDepartment)>(
@@ -94,13 +87,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<List<(DbEmployee, DbPassport, DbDepartment)>> GetEmployeeByCompanyId(int companyId)
     {
         var queryObject = new QueryObject(
-            @"SELECT e.id, e.name as ""Name"", e.surname as ""Surname"", e.phone as ""Phone"", e.companyid as ""CompanyId"", e.departmentid as ""DepartmentId"",
-                         p.id, p.type as ""Type"", p.number as ""Number"", p.employeeid as ""EmployeeId"",
-                         d.id, d.name as ""Name"", d.phone as ""Phone""
-                   FROM employees e
-                   LEFT JOIN passports p ON p.EmployeeId = e.Id 
-                   LEFT JOIN departments d ON d.Id = e.DepartmentId
-                   WHERE e.companyid = @companyId", new { companyId });
+            PostgresEmployeeElement.GetEmployeeByCompanyId, new { companyId });
 
         var employeeResults = await _dapperContext
             .QueryWithJoin<DbEmployee, DbPassport, DbDepartment, (DbEmployee, DbPassport, DbDepartment)>(
@@ -118,9 +105,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<DbEmployee> UpdateEmployee(int emplid, DbEmployee dbEmployee, IDbTransaction? transaction = null)
     {
         var queryObject = new QueryObject(
-            @"UPDATE employees SET name = @name, surname = @surname, phone = @phone, companyid = @companyid, departmentid = @departmentid
-                     WHERE id = @Id
-                     RETURNING id as ""Id"", name as ""Name"", surname as ""Surname"", phone as ""Phone"", companyid as ""CompanyId"", departmentid as ""DepartmentId""",
+            PostgresEmployeeElement.UpdateEmployee,
             new
             {
                 id = emplid, name = dbEmployee.Name, surname = dbEmployee.Surname, phone = dbEmployee.Phone,
@@ -136,9 +121,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<DbEmployee?> GetEmployeeById(int id)
     {
         var queryObject = new QueryObject(
-            @"SELECT id, name as ""Name"", surname as ""Surname"", phone as ""Phone"", companyid as ""CompanyId"", departmentid as ""DepartmentId""
-                   FROM employees
-                   WHERE id = @id", new { id });
+            PostgresEmployeeElement.GetEmployeeById, new { id });
         return await _dapperContext.FirstOrDefault<DbEmployee>(queryObject);
     }
 
@@ -146,7 +129,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task DeleteEmployee(int employeeId, IDbTransaction? transaction = null)
     {
         var queryObject = new QueryObject(
-            @"DELETE FROM Employees WHERE id = @id",
+            PostgresEmployeeElement.DeleteEmployee,
             new { id = employeeId });
 
         await _dapperContext.Command(queryObject, transaction);

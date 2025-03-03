@@ -1,0 +1,1 @@
+SELECT 1 FROM departments WHERE id = @Id LIMIT 1

@@ -1,0 +1,1 @@
+UPDATE passports SET type = @type, number = @number WHERE employeeid = @employeeid

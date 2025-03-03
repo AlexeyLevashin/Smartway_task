@@ -1,0 +1,1 @@
+INSERT INTO departments (Name, Phone) VALUES (@Name, @Phone) RETURNING Id as "Id", Name as "Name", Phone as "Phone"

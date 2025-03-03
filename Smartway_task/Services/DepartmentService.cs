@@ -1,8 +1,8 @@
 using Smartway_task.Exceptions;
 using Smartway_task.Mappers;
 using Smartway_task.Models;
-using Smartway_task.NewDto.Department.Requests;
-using Smartway_task.NewDto.Department.Responses;
+using Smartway_task.DTO.Department.Requests;
+using Smartway_task.DTO.Department.Responses;
 using Smartway_task.Repositories.Interfaces;
 using Smartway_task.Services.Interfaces;
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AddEmployee" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>AddEmployee.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="GetEmployeeByPhone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>GetEmployeeByPhone.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="GetEmployeeIdByPhone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>GetEmployeeIdByPhone.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="CheckExistingCompanyId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>CheckExistingCompanyId.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="GetEmployeeByDepartmentId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>GetEmployeeByDepartmentId.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="GetEmployeeByCompanyId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>GetEmployeeByCompanyId.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="UpdateEmployee" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>UpdateEmployee.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="GetEmployeeById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>GetEmployeeById.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+    <data name="DeleteEmployee" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>DeleteEmployee.sql;System.String, mscorlib, Version=4.0.0.0, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    </data>
+</root>

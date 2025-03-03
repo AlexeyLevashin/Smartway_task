@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Smartway_task.NewDto.Department.Requests;
+using Smartway_task.DTO.Department.Requests;
 using Smartway_task.Services.Interfaces;
 
 namespace Smartway_task.Controllers;

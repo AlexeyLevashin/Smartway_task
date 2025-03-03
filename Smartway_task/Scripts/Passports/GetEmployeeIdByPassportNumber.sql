@@ -1,0 +1,1 @@
+SELECT employeeid FROM passports WHERE number = @number LIMIT 1

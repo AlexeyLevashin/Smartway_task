@@ -1,5 +1,5 @@
-using Smartway_task.NewDto.Department.Requests;
-using Smartway_task.NewDto.Department.Responses;
+using Smartway_task.DTO.Department.Requests;
+using Smartway_task.DTO.Department.Responses;
 
 namespace Smartway_task.Services.Interfaces;
 

@@ -1,0 +1,1 @@
+SELECT 1 FROM departments WHERE phone = @Phone LIMIT 1

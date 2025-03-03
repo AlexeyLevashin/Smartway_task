@@ -4,8 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smartway_task", "Smartway_t
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50B8AD4C-3708-4A32-B8CF-1E3DCDB4255F}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose-dev.yml = docker-compose-dev.yml
 		docker-compose.yml = docker-compose.yml
-		docker-compose-prod.yml = docker-compose-prod.yml
 	EndProjectSection
 EndProject
 Global

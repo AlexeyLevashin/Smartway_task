@@ -1,6 +1,6 @@
 using Smartway_task.Models;
-using Smartway_task.NewDto.Employee.Requests;
-using Smartway_task.NewDto.Employee.Responses;
+using Smartway_task.DTO.Employee.Requests;
+using Smartway_task.DTO.Employee.Responses;
 
 namespace Smartway_task.Services.Interfaces;
 

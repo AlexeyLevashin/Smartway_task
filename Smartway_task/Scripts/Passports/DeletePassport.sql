@@ -1,0 +1,1 @@
+DELETE FROM passports WHERE employeeid = @employeeid

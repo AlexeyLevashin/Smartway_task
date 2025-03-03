@@ -1,0 +1,1 @@
+SELECT 1 FROM employees WHERE companyid = @companyId LIMIT 1

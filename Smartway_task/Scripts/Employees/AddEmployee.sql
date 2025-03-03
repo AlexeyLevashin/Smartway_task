@@ -1,0 +1,1 @@
+INSERT INTO employees (name, surname, phone, companyid, departmentid) VALUES (@name, @surname, @phone, @companyid, @departmentid) RETURNING Id as "Id"

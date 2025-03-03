@@ -1,0 +1,1 @@
+SELECT id FROM employees WHERE phone = @phone LIMIT 1

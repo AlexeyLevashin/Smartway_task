@@ -1,0 +1,1 @@
+SELECT 1 FROM passports WHERE number = @number LIMIT 1

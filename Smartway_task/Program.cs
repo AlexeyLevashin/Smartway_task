@@ -20,7 +20,10 @@ runner.MigrateUp();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
-app.MapSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.MapSwagger();
+    app.UseSwaggerUI();    
+}
 
 app.Run();

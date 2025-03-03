@@ -2,6 +2,7 @@ using Smartway_task.Dapper;
 using Smartway_task.Dapper.Interfaces;
 using Smartway_task.Models;
 using Smartway_task.Repositories.Interfaces;
+using Smartway_task.Scripts.Departments;
 
 namespace Smartway_task.Repositories;
 
@@ -17,16 +18,14 @@ public class DepartmentRepository : IDepartmentRepository
     public async Task<DbDepartment> AddDepartment(DbDepartment department)
     {
         var queryObject = new QueryObject(
-            @"INSERT INTO departments (Name, Phone) VALUES (@Name, @Phone)
-                RETURNING Id, Name, Phone", new { department.Name, department.Phone });
-
+            PostgresDepartmentElement.AddDepartment, new { department.Name, department.Phone });
         return await _dapperContext.CommandWithResponse<DbDepartment>(queryObject);
     }
 
     public async Task<int?> CheckExistingDepartmentId(int? departmentId)
     {
         var queryObject = new QueryObject(
-            @"SELECT 1 FROM departments WHERE id = @Id LIMIT 1",
+            PostgresDepartmentElement.CheckExistingDepartmentId,
             new {id = departmentId });
         return await _dapperContext.FirstOrDefault<int?>(queryObject);
     }
@@ -34,8 +33,8 @@ public class DepartmentRepository : IDepartmentRepository
     public async Task<string?> GetDepartmentByPhone(string phone)
     {
         var queryObject = new QueryObject(
-            @"SELECT 1 FROM departments WHERE id = @Id LIMIT 1",
+            PostgresDepartmentElement.GetDepartmentByPhone,
             new { phone });
-        return await _dapperContext.FirstOrDefault<string>(queryObject);
+        return await _dapperContext.FirstOrDefault<string?>(queryObject);
     }
 }
